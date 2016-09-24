@@ -7,7 +7,7 @@ import java.io.IOException;
 
 public class HostIOMonitorThread extends Thread {
 
-    ProcessWatchingThread watchingThread = new ProcessWatchingThread();
+    private ProcessWatchingThread watchingThread = new ProcessWatchingThread();
 
     @Override
     public void run() {

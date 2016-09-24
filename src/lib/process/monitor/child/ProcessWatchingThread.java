@@ -11,9 +11,9 @@ import java.util.ArrayList;
 
 public class ProcessWatchingThread extends Thread {
 
-    ProcessWatcher watcher;
+    private ProcessWatcher watcher;
 
-    ArrayList<Integer> pids = new ArrayList<>();
+    private ArrayList<Integer> pids = new ArrayList<>();
 
     public ProcessWatchingThread() {
         switch (Utilities.OSUtils.getOS()) {

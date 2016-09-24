@@ -11,9 +11,9 @@ import java.io.OutputStream;
 
 public class ChildIOMonitorThread extends Thread {
 
-    Process processToWatch;
-    ProcessMonitorHost host;
-    int childPID;
+    private Process processToWatch;
+    private ProcessMonitorHost host;
+    private int childPID;
 
     public ChildIOMonitorThread(Process processToWatch, ProcessMonitorHost host) throws IOException {
         this.processToWatch = processToWatch;

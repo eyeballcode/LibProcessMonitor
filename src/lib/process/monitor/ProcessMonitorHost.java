@@ -11,10 +11,10 @@ public class ProcessMonitorHost {
 
     public int myPID = Utilities.getPID();
 
-    int watcherCount;
+    private int watcherCount;
 
     ArrayList<Integer> pids = new ArrayList<>();
-    ArrayList<ChildIOMonitorThread> childIOMonitorThreads = new ArrayList<>();
+    private ArrayList<ChildIOMonitorThread> childIOMonitorThreads = new ArrayList<>();
 
     public ProcessMonitorHost(int numberOfWatchers) {
         watcherCount = numberOfWatchers;
