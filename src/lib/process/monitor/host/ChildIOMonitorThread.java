@@ -53,6 +53,7 @@ public class ChildIOMonitorThread extends Thread {
                     switch (linesRead++) {
                         case 0:
                             if (line.startsWith(HandshakeConstants.PID_ANNOUNCE_START)) {
+                                line = line.trim();
                                 childPID = Integer.parseInt(line.substring(HandshakeConstants.PID_ANNOUNCE_START.length()));
                                 this.childPID = childPID;
                                 System.out.println("Connected to watcher " + childPID);

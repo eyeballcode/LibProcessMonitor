@@ -7,7 +7,7 @@ public class TestMonitor {
 
     public static void main(String[] args) throws IOException {
         System.out.println("This is " + Utilities.getPID());
-        ProcessMonitorHost monitorHost = new ProcessMonitorHost(4);
+        ProcessMonitorHost monitorHost = new ProcessMonitorHost(2);
         monitorHost.createWatchers();
     }
 

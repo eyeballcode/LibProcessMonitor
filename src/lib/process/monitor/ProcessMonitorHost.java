@@ -22,7 +22,6 @@ public class ProcessMonitorHost {
 
     public void createWatchers() throws IOException {
         File codeBase = new File(ProcessMonitorHost.class.getProtectionDomain().getCodeSource().getLocation().getPath());
-        System.out.println(codeBase);
 
         ArrayList<String> args = new ArrayList<>();
         args.add(new File(new File(new File(System.getProperty("java.home")), "bin"), "java").getAbsolutePath());

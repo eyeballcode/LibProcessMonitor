@@ -2,6 +2,7 @@ package lib.process.monitor.child;
 
 import lib.process.monitor.child.watching.ProcessWatcher;
 import lib.process.monitor.child.watching.UNIXProcessWatcher;
+import lib.process.monitor.child.watching.WindowsProcessWatcher;
 import lib.process.monitor.util.Utilities;
 
 import javax.swing.*;
