@@ -15,9 +15,13 @@ public class ChildIOMonitorThread extends Thread {
     private ProcessMonitorHost host;
     private int childPID;
 
-    public ChildIOMonitorThread(Process processToWatch, ProcessMonitorHost host) throws IOException {
+    private String handlerClass, handlerSource;
+
+    public ChildIOMonitorThread(Process processToWatch, ProcessMonitorHost host, String handlerClass, String handlerSource) throws IOException {
         this.processToWatch = processToWatch;
         this.host = host;
+        this.handlerClass = handlerClass;
+        this.handlerSource = handlerSource;
         registerID(Utilities.getPID());
     }
 
@@ -49,7 +53,6 @@ public class ChildIOMonitorThread extends Thread {
                 if (c == '\n') {
                     String line = currentLine.toString();
                     currentLine = new StringBuilder();
-                    System.out.println("Received line " + line);
                     switch (linesRead++) {
                         case 0:
                             if (line.startsWith(HandshakeConstants.PID_ANNOUNCE_START)) {
@@ -58,6 +61,7 @@ public class ChildIOMonitorThread extends Thread {
                                 this.childPID = childPID;
                                 System.out.println("Connected to watcher " + childPID);
                                 host.registerPID(childPID);
+                                registerHandler();
                             } else {
                                 host.error("Child did not give correct handshake.", ChildError.HANDSHAKE_PID_ANNOUNCE_FAIL);
                             }
@@ -71,5 +75,15 @@ public class ChildIOMonitorThread extends Thread {
             }
 
         }
+    }
+
+    private void registerHandler() throws IOException {
+        OutputStream outputStream = processToWatch.getOutputStream();
+        outputStream.write((HandshakeConstants.SEND_HANDLER + handlerClass).getBytes());
+        outputStream.write('\n');
+        outputStream.write((HandshakeConstants.SEND_HANDLER_SOURCE + handlerSource).getBytes());
+        outputStream.write('\n');
+
+        outputStream.flush();
     }
 }

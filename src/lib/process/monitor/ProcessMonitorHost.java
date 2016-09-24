@@ -1,5 +1,7 @@
 package lib.process.monitor;
 
+import lib.process.monitor.common.DeathUtil;
+import lib.process.monitor.handle.ProcessDeathHandler;
 import lib.process.monitor.host.ChildIOMonitorThread;
 import lib.process.monitor.util.Utilities;
 
@@ -16,8 +18,12 @@ public class ProcessMonitorHost {
     ArrayList<Integer> pids = new ArrayList<>();
     private ArrayList<ChildIOMonitorThread> childIOMonitorThreads = new ArrayList<>();
 
-    public ProcessMonitorHost(int numberOfWatchers) {
+    private String handlerClass, handlerSource;
+
+    public ProcessMonitorHost(int numberOfWatchers, ProcessDeathHandler handler) {
         watcherCount = numberOfWatchers;
+        handlerClass = handler.getClass().getName();
+        handlerSource = handler.getClass().getProtectionDomain().getCodeSource().getLocation().getPath();
     }
 
     public void createWatchers() throws IOException {
@@ -35,7 +41,7 @@ public class ProcessMonitorHost {
         ProcessBuilder processBuilder = new ProcessBuilder(args);
         for (int i = 0; i < watcherCount; i++) {
             Process watcher = processBuilder.start();
-            ChildIOMonitorThread monitorThread = new ChildIOMonitorThread(watcher, this);
+            ChildIOMonitorThread monitorThread = new ChildIOMonitorThread(watcher, this, handlerClass, handlerSource);
             monitorThread.start();
             childIOMonitorThreads.add(monitorThread);
         }
@@ -54,8 +60,6 @@ public class ProcessMonitorHost {
     }
 
     public void processKilled(String pid) {
-//        while (true) {
-            System.out.println("PROCESS " + pid + " KILLED!!! I WON'T STOP SPAMMING!! :D:D:D");
-//        }
+        DeathUtil.onDeath(handlerClass, handlerSource);
     }
 }

@@ -3,6 +3,7 @@ package lib.process.monitor.child;
 import lib.process.monitor.child.watching.ProcessWatcher;
 import lib.process.monitor.child.watching.UNIXProcessWatcher;
 import lib.process.monitor.child.watching.WindowsProcessWatcher;
+import lib.process.monitor.common.DeathUtil;
 import lib.process.monitor.util.Utilities;
 
 import javax.swing.*;
@@ -14,6 +15,17 @@ public class ProcessWatchingThread extends Thread {
     private ProcessWatcher watcher;
 
     private ArrayList<Integer> pids = new ArrayList<>();
+
+    private String handlerClass, handlerSource;
+
+
+    public void setHandlerClass(String handlerClass) {
+        this.handlerClass = handlerClass;
+    }
+
+    public void setHandlerSource(String handlerSource) {
+        this.handlerSource = handlerSource;
+    }
 
     public ProcessWatchingThread() {
         switch (Utilities.OSUtils.getOS()) {
@@ -36,11 +48,7 @@ public class ProcessWatchingThread extends Thread {
         while (true) {
             for (int pid : pids) {
                 if (!watcher.isAlive(pid)) {
-                    // For now until handlers are done...
-                    JFrame f = new JFrame("MEOW MEOW PID " + pid + " DEAD! THIS IS PID " + Utilities.getPID() + " REPORTING FOR DUTY!");
-                    f.setPreferredSize(Toolkit.getDefaultToolkit().getScreenSize());
-                    f.pack();
-                    f.setVisible(true);
+                    DeathUtil.onDeath(handlerClass, handlerSource);
                     return;
                 }
             }

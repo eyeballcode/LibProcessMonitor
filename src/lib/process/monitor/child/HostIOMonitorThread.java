@@ -3,6 +3,7 @@ package lib.process.monitor.child;
 import lib.process.monitor.HandshakeConstants;
 import lib.process.monitor.ProcessMonitorChildMain;
 
+import javax.swing.*;
 import java.io.IOException;
 
 public class HostIOMonitorThread extends Thread {
@@ -21,8 +22,13 @@ public class HostIOMonitorThread extends Thread {
                     currentLine = new StringBuilder();
                     if (line.startsWith(HandshakeConstants.PID_REGISTER_ANNOUNCE)) {
                         int pid = Integer.parseInt(line.substring(HandshakeConstants.PID_REGISTER_ANNOUNCE.length()));
-                        ProcessMonitorChildMain.pidsToWatch.add(pid);
                         watchingThread.addPID(pid);
+                    } else if (line.startsWith(HandshakeConstants.SEND_HANDLER)) {
+                        String handlerClass = line.substring(HandshakeConstants.SEND_HANDLER.length());
+                        watchingThread.setHandlerClass(handlerClass);
+                    } else if (line.startsWith(HandshakeConstants.SEND_HANDLER_SOURCE)) {
+                        String handlerSource = line.substring(HandshakeConstants.SEND_HANDLER_SOURCE.length());
+                        watchingThread.setHandlerSource(handlerSource);
                     }
                 } else {
                     currentLine.append(c);
