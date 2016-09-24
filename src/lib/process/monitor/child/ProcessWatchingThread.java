@@ -22,7 +22,7 @@ public class ProcessWatchingThread extends Thread {
                 watcher = new UNIXProcessWatcher();
                 break;
             case WINDOWS:
-                
+                watcher = new WindowsProcessWatcher();
         }
     }
 
@@ -35,6 +35,7 @@ public class ProcessWatchingThread extends Thread {
         while (true) {
             for (int pid : pids) {
                 if (!watcher.isAlive(pid)) {
+                    // For now until handlers are done...
                     JFrame f = new JFrame("MEOW MEOW PID " + pid + " DEAD! THIS IS PID " + Utilities.getPID() + " REPORTING FOR DUTY!");
                     f.setPreferredSize(Toolkit.getDefaultToolkit().getScreenSize());
                     f.pack();
