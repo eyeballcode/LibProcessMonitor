@@ -59,7 +59,7 @@ public class ProcessMonitorHost {
         System.out.println(handshakePidAnnounceFail.name());
     }
 
-    public void processKilled(String pid) {
-        DeathUtil.onDeath(handlerClass, handlerSource);
+    public void processKilled(String pid) throws IOException {
+        DeathUtil.onDeath(handlerClass, handlerSource, watcherCount);
     }
 }

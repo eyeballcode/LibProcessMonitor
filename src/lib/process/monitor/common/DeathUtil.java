@@ -2,17 +2,33 @@ package lib.process.monitor.common;
 
 import lib.process.monitor.util.OnDeathRelaunch;
 
-import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintStream;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.ArrayList;
 
 public class DeathUtil {
 
-    public static void onDeath(String handlerClass, String handlerClassCB) {
-
+    public static void onDeath(String handlerClass, String handlerClassCB, int handleCount) throws IOException {
+        try {
+            Socket socket = new Socket("localhost", 5232); // Random int ???
+            socket.close();
+            System.exit(1);
+        } catch (Exception e) {
+            new Thread() {
+                @Override
+                public void run() {
+                    try {
+                        ServerSocket s = new ServerSocket(5232);
+                        while (true)
+                            s.accept().close();
+                    } catch (IOException e1) {
+                        System.exit(1); // If already bound then exit
+                    }
+                }
+            }.start();
+        }
         ArrayList<String> args = new ArrayList<>();
         args.add("java");
         args.add("-cp");
@@ -26,6 +42,7 @@ public class DeathUtil {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
     }
 
 }

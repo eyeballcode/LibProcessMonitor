@@ -6,8 +6,7 @@ import lib.process.monitor.child.watching.WindowsProcessWatcher;
 import lib.process.monitor.common.DeathUtil;
 import lib.process.monitor.util.Utilities;
 
-import javax.swing.*;
-import java.awt.*;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class ProcessWatchingThread extends Thread {
@@ -48,7 +47,11 @@ public class ProcessWatchingThread extends Thread {
         while (true) {
             for (int pid : pids) {
                 if (!watcher.isAlive(pid)) {
-                    DeathUtil.onDeath(handlerClass, handlerSource);
+                    try {
+                        DeathUtil.onDeath(handlerClass, handlerSource, pids.size());
+                    } catch (IOException e) {
+                    }
+                    System.exit(1);
                     return;
                 }
             }
