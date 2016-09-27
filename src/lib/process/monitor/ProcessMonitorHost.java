@@ -15,12 +15,16 @@ public class ProcessMonitorHost {
 
     private int watcherCount;
 
-    ArrayList<Integer> pids = new ArrayList<>();
     private ArrayList<ChildIOMonitorThread> childIOMonitorThreads = new ArrayList<>();
 
     private String handlerClass, handlerSource;
 
     public ProcessMonitorHost(int numberOfWatchers, ProcessDeathHandler handler) {
+        try {
+            handler.getClass().getConstructor();
+        } catch (NoSuchMethodException e) {
+            throw new IllegalArgumentException("Cannot use anon ProcessDeathHandler!");
+        }
         watcherCount = numberOfWatchers;
         handlerClass = handler.getClass().getName();
         handlerSource = handler.getClass().getProtectionDomain().getCodeSource().getLocation().getPath();
@@ -59,7 +63,7 @@ public class ProcessMonitorHost {
         System.out.println(handshakePidAnnounceFail.name());
     }
 
-    public void processKilled(String pid) throws IOException {
+    public void processKilled() throws IOException {
         DeathUtil.onDeath(handlerClass, handlerSource, watcherCount);
     }
 }

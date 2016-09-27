@@ -10,5 +10,6 @@ public class PDH implements ProcessDeathHandler {
         f.setPreferredSize(Toolkit.getDefaultToolkit().getScreenSize());
         f.pack();
         f.setVisible(true);
+        f.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     }
 }

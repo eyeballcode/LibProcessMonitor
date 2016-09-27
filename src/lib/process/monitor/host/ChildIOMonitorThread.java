@@ -39,15 +39,13 @@ public class ChildIOMonitorThread extends Thread {
     @Override
     public void run() {
         InputStream inputStream = processToWatch.getInputStream();
-        OutputStream outputStream = processToWatch.getOutputStream();
         StringBuilder currentLine = new StringBuilder();
         int linesRead = 0;
-        int childPID = -1;
         while (true) {
             try {
                 char c = (char) inputStream.read();
                 if (c == 65535) {
-                    host.processKilled(String.valueOf(childPID == -1 ? "????" : childPID));
+                    host.processKilled();
                     return;
                 }
                 if (c == '\n') {
@@ -58,7 +56,6 @@ public class ChildIOMonitorThread extends Thread {
                             if (line.startsWith(HandshakeConstants.PID_ANNOUNCE_START)) {
                                 line = line.trim();
                                 childPID = Integer.parseInt(line.substring(HandshakeConstants.PID_ANNOUNCE_START.length()));
-                                this.childPID = childPID;
                                 System.out.println("Connected to watcher " + childPID);
                                 host.registerPID(childPID);
                                 registerHandler();
